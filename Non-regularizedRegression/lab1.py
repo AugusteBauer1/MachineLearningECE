@@ -26,12 +26,10 @@ theta = np.zeros(X_train.shape[1])
 print(theta)
 E = 10**3
 dE = 10**3
-eps = 10**-10 # Tu commenceras avec une valeur plus élevé (10 il me semble). Cpt plus tu mets un epsilon faible, plus ton apprentissage est précis
+eps = 10**-10 
 alpha = 10**-2 # or 10**-3
 iter = 0
 
-
-#You'll get algo during the class
 
 while abs(dE) > eps :
 
