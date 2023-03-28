@@ -40,13 +40,22 @@ def update_centroids(data, assignments, k):
 
     return centroids
 
-def k_means(data, k, max_iterations=100):
+def k_means(data, k, epsilon):
     centroids = initialize_centroids(data, k)
-    for _ in range(max_iterations):
+    prev_centroids = np.zeros_like(centroids)
+    converged = False
+
+    while not converged:
         assignments = assign_to_centroids(data, centroids)
         new_centroids = update_centroids(data, assignments, k)
-        if np.allclose(centroids, new_centroids):
-            break
+
+        centroid_changes = np.linalg.norm(new_centroids - prev_centroids)
+
+        print(centroid_changes)
+        if (centroid_changes < epsilon):
+            converged = True
+        
+        prev_centroids = centroids
         centroids = new_centroids
     return centroids, assignments
 
@@ -61,9 +70,12 @@ def plot_results(data, centroids, assignments):
 # Load data
 data = load_data('./data_kmeans.txt')
 
+
 # Cluster data using K-means
 k = 3
-centroids, assignments = k_means(data, k)
+epsilon = 1e-4
+
+centroids, assignments = k_means(data, k, epsilon)
 
 # Plot training results
 plot_results(data, centroids, assignments)
