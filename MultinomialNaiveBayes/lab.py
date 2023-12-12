@@ -1,13 +1,14 @@
 import numpy as np
 from collections import Counter
-
+import re
 
 def load_data():
     """Load data from file."""
-    with open('ML3/Lab1/messages.txt') as f:
+    with open('MultinomialNaiveBayes/messages.txt') as f:
         data = f.readlines()
     data = [x.strip() for x in data]
     return data
+
 
 def make_Dictionary(train_data):
     """Create a dictionary of words from the training set."""
@@ -26,6 +27,7 @@ def make_Dictionary(train_data):
     dictionary = dictionary.most_common(3000)
     return dictionary
 
+
 def extract_features(data, dictionary):
     """Extract features from the data."""
     features_matrix = np.zeros((len(data), 3000))
@@ -40,6 +42,7 @@ def extract_features(data, dictionary):
                     features_matrix[docID, wordID] = words.count(word)
         docID = docID + 1
     return features_matrix
+
 
 def fit(train_matrix, train_spam, train_ham, dictionary):
     """
@@ -94,7 +97,7 @@ def predict(test_matrix, theta_spam, theta_ham, phi_Y):
     -------
     y_pred : numpy array, Predicted class of each email in the test set.
     """
-    
+
     y_pred = np.zeros(len(test_matrix))
     log_prior_spam = np.log(phi_Y)
     log_prior_ham = np.log(1 - phi_Y)
@@ -124,7 +127,7 @@ train_spam = []
 train_ham = []
 for i in range(len(train_data)):
     if train_data[i].split('\t')[0] == 'spam':
-        train_spam.append(train_data[i].split('\t')[1])
+        train_spam.append(train_data[i].split(' ')[1])
     else:
         train_ham.append(train_data[i].split('\t')[1])
 
@@ -138,7 +141,6 @@ for i in range(len(test_data)):
         test_ham.append(test_data[i].split('\t')[1])
 
 dictionary = make_Dictionary(train_spam + train_ham)
-# print(len(dictionary))
 
 train_matrix = extract_features(train_spam + train_ham, dictionary)
 test_matrix = extract_features(test_spam + test_ham, dictionary)
